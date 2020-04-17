@@ -2,7 +2,7 @@ require 'dockingstation'
 require 'bike'
 describe DockingStation do
 
-  it {is_expected.to respond_to(:release_bike)}
+  it { is_expected.to respond_to(:release_bike) }
 
   it 'releases working bikes' do
     bike = Bike.new
@@ -15,7 +15,7 @@ describe DockingStation do
      expect{subject.release_bike}.to raise_error('There are no bikes')
    end
 
-   it {is_expected.to respond_to(:dock).with(1).argument}
+   it { is_expected.to respond_to(:dock).with(1).argument }
 
   describe "#dock" do
 
@@ -32,6 +32,19 @@ describe DockingStation do
      end
    end
   end
-
-
+  
+  describe "#initialize" do
+    context "with a custom capacity" do
+      subject { described_class.new(40) }
+      it "has a capacity of 40 when created with a capacity of 40" do
+        expect(subject.capacity).to eq(40)
+      end
+    end
+    context "with a default capacity" do
+      subject { described_class.new }
+      it "has a default capacity" do
+        expect(subject.capacity).to eq(DockingStation::DEFAULT_CAPACITY)
+      end
+    end
+  end
 end
