@@ -5,10 +5,11 @@ attr_reader :bike
 
   def release_bike
    raise 'There are no bikes' if !@bike
-   Bike.new
+   @bike
   end
 
   def dock(bike)
+    raise 'the dock is full' if @bike
     @bike = bike
   end
 
