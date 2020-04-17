@@ -13,8 +13,17 @@ class DockingStation
 
   def release_bike
    raise 'There are no bikes' if empty?
-   raise 'There are no bikes' if !@bikes[0].working?
-   @bikes.pop
+   
+   working_bike = nil
+   @bikes.each_with_index do |bike, index|
+     if bike.working?
+       working_bike = @bikes[index]
+       @bikes.delete_at(index)
+     end
+   end
+   
+   raise 'There are no bikes' if working_bike == nil
+   return working_bike
   end
 
   def dock(bike, working = true)
