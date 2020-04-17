@@ -6,7 +6,7 @@ class Bike
  end
 
   def working?
-  true
+   @state
   end
 
 end

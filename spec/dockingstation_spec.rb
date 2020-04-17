@@ -31,6 +31,14 @@ describe DockingStation do
        expect { subject.dock(Bike.new) }.to raise_error('the dock is full')
      end
    end
+   
+   context "when the bike is broken" do
+     it "is reported to be broken" do
+       bike = Bike.new
+       subject.dock(bike, false)
+       expect(subject.bikes[0].working?).to be false
+     end
+   end
   end
   
   describe "#initialize" do
