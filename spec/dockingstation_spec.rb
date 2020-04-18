@@ -1,75 +1,58 @@
 require 'dockingstation'
-require 'bike'
+
 describe DockingStation do
+  subject(:dockingstation) {described_class.new}
+  let(:bike) {Bike.new}
 
-  it { is_expected.to respond_to(:release_bike) }
 
-  it 'releases working bikes' do
-    bike = Bike.new
-    subject.dock(bike)
-    bike = subject.release_bike
-    expect(bike).to be_working
-  end
-
-   it 'raises an error when there are no bikes' do
-     expect{subject.release_bike}.to raise_error('There are no bikes')
-   end
-   
-   it 'raises an error if all bikes are broken' do
-     broken_bike = Bike.new
-     broken_bike.state = false
-     subject.dock(broken_bike, false)
-     expect{subject.release_bike}.to raise_error('There are no bikes')
-   end
-   
-   it 'returns a bike if there is one that is working' do
-     broken_bike = Bike.new
-     broken_bike.state = false
-     subject.dock(broken_bike, false)
-     working_bike = Bike.new
-     subject.dock(working_bike)
-     expect(subject.release_bike.working?).to be true
-   end
-   
-
-   it { is_expected.to respond_to(:dock).with(1).argument }
-
-  describe "#dock" do
-
-   it 'returns docked bikes' do
-    bike = Bike.new
-    subject.dock(bike)
-    expect(subject.bikes).to include bike
-   end
-
-   context "when the dock is full" do
-     it "raises an error 'the dock is full'" do
-       DockingStation::DEFAULT_CAPACITY.times {subject.dock(Bike.new)}
-       expect { subject.dock(Bike.new) }.to raise_error('the dock is full')
-     end
-   end
-   
-   context "when the bike is broken" do
-     it "is reported to be broken" do
-       bike = Bike.new
-       subject.dock(bike, false)
-       expect(subject.bikes[0].working?).to be false
-     end
-   end
-  end
-  
-  describe "#initialize" do
-    context "with a custom capacity" do
-      subject { described_class.new(40) }
-      it "has a capacity of 40 when created with a capacity of 40" do
-        expect(subject.capacity).to eq(40)
-      end
-    end
-    context "with a default capacity" do
-      subject { described_class.new }
-      it "has a default capacity" do
-        expect(subject.capacity).to eq(DockingStation::DEFAULT_CAPACITY)
-      end
+  describe ' #initialize' do
+    it {is_expected.to respond_to(:capacity)}
+    it {is_expected.to respond_to(:bikes)}
+    it 'default value of capacity is 20' do
+      docking_station = DockingStation.new(20)
+      expect(dockingstation.capacity).to eq 20
     end
   end
-end
+
+  describe '#release' do
+    it { is_expected.to respond_to(:release_bike) }
+
+    it 'releases working bikes' do
+      dockingstation.dock(bike)
+      dockingstation.release_bike
+      expect(bike.status).to eq true
+    end
+
+    it 'not release broken bikes' do
+      bike.report_broken
+      dockingstation.dock(bike)
+      expect {dockingstation.release_bike}.to raise_error("There are no bikes")
+    end
+
+    it 'gives error if no bikes available' do
+      expect {dockingstation.release_bike}.to raise_error("There are no bikes")
+    end
+
+  end
+
+  describe '#dock' do
+    it {is_expected.to respond_to(:dock)}
+
+    it 'bike is docked in dockingstation' do
+
+      expect(dockingstation).to respond_to(:dock).with(1).argument
+    end
+
+    it 'if station is full make an error ' do
+      DockingStation::DEFAULT_CAPACITY.times do
+        dockingstation.dock(bike)
+      end
+      expect {dockingstation.dock(bike)}.to raise_error("The station is full")
+    end
+
+
+
+
+
+    end
+  end
