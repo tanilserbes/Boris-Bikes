@@ -11,7 +11,7 @@ class DockingStation
 
   def release_bike
     @bikes.each_with_index do |bike, index|
-      if bike.status == false
+      if bike.working? == false
          bike = @bikes.delete_at(index)
       end
     end

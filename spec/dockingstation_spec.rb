@@ -18,14 +18,14 @@ describe DockingStation do
     it { is_expected.to respond_to(:release_bike) }
 
     it 'releases working bikes' do
-      dockingstation.dock(bike)
-      dockingstation.release_bike
-      expect(bike.status).to eq true
+      dockingstation.dock double :bike
+      bike = dockingstation.release_bike
+      expect(bike.working?).to eq true
     end
 
     it 'not release broken bikes' do
       bike.report_broken
-      dockingstation.dock(bike)
+      dockingstation.dock double :bike
       expect {dockingstation.release_bike}.to raise_error("There are no bikes")
     end
 
@@ -45,9 +45,9 @@ describe DockingStation do
 
     it 'if station is full make an error ' do
       DockingStation::DEFAULT_CAPACITY.times do
-        dockingstation.dock(bike)
+        dockingstation.dock double :bike
       end
-      expect {dockingstation.dock(bike)}.to raise_error("The station is full")
+      expect {dockingstation.dock double(:bike)}.to raise_error("The station is full")
     end
 
 
