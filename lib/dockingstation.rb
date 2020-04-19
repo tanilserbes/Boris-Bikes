@@ -10,19 +10,19 @@ class DockingStation
  end
 
   def release_bike
+
     @bikes.each_with_index do |bike, index|
-      if bike.working? == false
-         bike = @bikes.delete_at(index)
+      if bike.working? == true
+        return @bikes.delete_at(index)
       end
     end
-    raise "There are no bikes" if empty?
-    return @bikes.pop
+    raise "There are no bikes" if empty? || @bikes[0].working? == false
   end
 
   def dock(bike)
     raise "The station is full" if full?
     @bikes << bike
-    end
+  end
 
   private
     def full?
